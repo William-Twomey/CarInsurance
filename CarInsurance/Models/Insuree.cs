@@ -26,5 +26,83 @@ namespace CarInsurance.Models
         public int SpeedingTickets { get; set; }
         public bool CoverageType { get; set; }
         public decimal Quote { get; set; }
+
+        public int Calculate(DateTime dateOfBirth, int carYear, string carMake, string carModel, bool dui, int speedingTickets, bool coverageType, decimal quote)
+        {
+            this.DateOfBirth = dateOfBirth;
+            this.CarYear = carYear;
+            this.CarMake = carMake;
+            this.CarModel = carModel;
+            this.SpeedingTickets = speedingTickets;
+            this.CoverageType = coverageType;
+            this.Quote = quote;
+
+
+            quote = 50;
+
+            
+            //Finding customers age
+            DateTime today = DateTime.Today;
+            var age = today.Year - dateOfBirth.Year;
+
+            if (dateOfBirth > today.AddYears(-age))
+            {
+                age--;
+            }
+
+            //Calculating the quote for the customer
+            
+            if (age <= 18)
+            {
+                quote +=100;
+                    
+            }
+
+            else if (age == 19 && age <= 25)
+            {
+                quote += 50;
+                    
+            }
+            else if (age > 25)
+            {
+                quote += 25;
+                    
+            }
+                
+            if (carYear < 2000 || carYear > 2015)
+            {
+                quote += 25;
+            }
+            if (carMake == "Porsche")
+            {
+                quote += 25;
+            }
+            if (carMake == "Porsche" && carModel == "911 Carrera")
+            {
+                quote += 25;
+            }
+            if (speedingTickets > 0)
+            {
+                var speedAddOn = speedingTickets * 10;
+                quote += speedAddOn;
+            }
+            if (dui == true)
+            {
+                var duiCalculation = quote / 100 * 25;
+                quote += duiCalculation;
+            }
+            if (coverageType == true)
+            {
+                var fullCover = quote / 100 * 50;
+                quote += fullCover;
+            }
+            
+            
+
+
+            return (int)quote;
+
+
+        }
     }
 }

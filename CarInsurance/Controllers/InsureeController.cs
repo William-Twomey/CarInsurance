@@ -14,6 +14,8 @@ namespace CarInsurance.Controllers
     {
         private InsuranceEntities db = new InsuranceEntities();
 
+        
+
         // GET: Insuree
         public ActionResult Index()
         {
@@ -43,6 +45,8 @@ namespace CarInsurance.Controllers
             return View();
         }
 
+        
+
         // POST: Insuree/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
@@ -51,15 +55,17 @@ namespace CarInsurance.Controllers
         public ActionResult Create([Bind(Include = "Id,FirstName,LastName,EmailAddress,DateOfBirth,CarYear,CarMake,CarModel,DUI,SpeedingTickets,CoverageType,Quote")] Insuree insuree)
         {
             
-
             if (ModelState.IsValid)
             {
+                //Calling method to calculate clients quote
+                insuree.Quote = insuree.Calculate(insuree.DateOfBirth, insuree.CarYear, insuree.CarMake, insuree.CarModel, insuree.DUI, insuree.SpeedingTickets, insuree.CoverageType, insuree.Quote);
+                
                 db.Insurees.Add(insuree);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
 
-            return View(insuree);
+            return View(insuree.CarMake);
         }
 
         // GET: Insuree/Edit/5
